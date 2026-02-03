@@ -3,7 +3,7 @@ const express = require("express");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
-// Note: express-async-errors no longer available as an npmjs.com package -> thus not imported as a package.json package
+// Note: express-async-errors no longer available as an npmjs.com package -> thus not imported as a package.json package.  Per CTD Lead Gina, I can handle async errors using try/catch in my routes
 
 const app = express();
 
