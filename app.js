@@ -7,12 +7,17 @@ const passportInit = require("./passport/passportInit")
 const auth = require("./middleware/auth")
 const secretWordRouter = require("./routes/secretWord")
 
+//csrf
+const cookieParser = require("cookie-parser")
+const csrf = require("host-csrf")
 
 passportInit()
 const url = process.env.MONGO_URI;
 // Note: express-async-errors no longer available as an npmjs.com package -> thus not imported as a package.json package.  Per CTD Lead Gina, I can handle async errors using try/catch in my routes
 
 const app = express();
+
+app.use(cookieParser(process.env.SESSION_SECRET))
 
 app.set("view engine", "ejs");
 // Note: body-parser part of express version 5 thus not needed to import and require body-parser as a package.json
@@ -61,14 +66,23 @@ app.use(require("connect-flash")());
 app.use(passport.initialize())
 app.use(passport.session())
 
+//csrf middleware
+const csrfMiddleware = csrf.csrf()
+app.use(csrfMiddleware)
+
+app.use((req, res, next) => {
+  const token = csrf.refreshToken(req, res)
+  res.locals._csrf = token
+  next()
+})
+
+
 app.use(require("./middleware/storeLocals"))
 app.get("/", (req,res) => {
   res.render("index")
 })
 app.use("/sessions", require("./routes/sessionRoutes"))
 app.use("/secretWord", auth, secretWordRouter)
-
-
 
 
 
