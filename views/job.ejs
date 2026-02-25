@@ -5,17 +5,17 @@
   <input type="hidden" name="_csrf" value="<%= _csrf%>">
 
     <label for="company">Company</label>
-    <input type="text" name="company">
+    <input type="text" name="company" value=<%= job? `${job.company}` : "" %>>
 
     <label for="position">Position</label>
-    <input type="text" name="position">
+    <input type="text" name="position" value=<%= job? `${job.position}` : "" %>>
 
     <label for="status">Choose status:</label>
    <select name="status" id="status">
     <option value="">--Select an option--</option>
-    <option value="pending">pending</option>
-    <option value="interview">interview</option>
-    <option value="declined">declined</option>
+    <option value="pending" <%= job && job.status === 'pending'? 'selected' : ''%>>pending</option>
+    <option value="interview" <%= job && job.status === 'interview'? 'selected' : ''%>>interview</option>
+    <option value="declined" <%= job && job.status === 'declined'? 'selected' : ''%>>declined</option>
    </select>
 
    <button type="submit">
